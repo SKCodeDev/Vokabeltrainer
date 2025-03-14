@@ -1,0 +1,101 @@
+body { 
+    font-family: Arial, sans-serif;                                                     /*schriftart der ganzen website*/
+    background: linear-gradient(to right, rgb(32, 97, 228), rgb(184, 184, 226));    /*hintergrundfarbe; 
+                                                                                          von rechts nach links immer heller werdender blauton*/
+}    
+        
+h1{
+    text-align: center;                      /*position des textes*/
+    color: white;                          /*textfarbe*/
+    font-size: 50px;                         /*textgröße*/
+    text-shadow: black 10px 10px 20px;     /*black: farbe des schattens  10px: verschiebung nach rechts  
+                                               10px: verschiebung nach unten  20px: schatten ist bisschen verschwommener*/
+} 
+
+
+
+input { 
+    margin: 5px;                             /*abstand zueinander*/
+    padding: 10px;                           /*abstand zu den rändern der "box"*/
+    background-color: white;
+    border-radius: 10px;                     /*rundung des randes*/
+    border: 0.5px solid grey;
+    transition: 0.15s ease-in-out;           /*animation ⬇️ wird innerhalb von 0.1s zwischendurch schneller und dann wieder langsamer*/
+}
+
+input:hover, input:focus{                    /*➡️ wenn man mit der maus über das textfeld hovert oder man es anklickt*/
+    border-radius: 50px;
+    border: 1px solid grey;
+}
+
+button{
+    margin: 5px;
+    padding: 10px;          
+    width: auto;                                
+    cursor: pointer;                          /*cursor wird zum "pointer"*/
+    background-color: rgb(74, 74, 250);
+    color: white;
+    font-weight: bold;                        /*schriftstärke/-dicke*/
+    border-radius: 20px;                      
+    border: none;
+    transition: 0.2s ease-in-out;
+}
+
+button:hover{
+    width: calc(auto + 5px);                            /*buttons werden minimal größer*/
+    background-color: rgb(102, 102, 251);             /*farbe der buttons wird minimal heller*/
+    letter-spacing: 1px;                                /*abstand der buchstaben zueinander wird erhöht*/
+}
+
+.box{
+    width: 750px;
+    margin-top: 80px;                        /*abstand zum oberen bildschirmrand*/
+    margin-left: auto;                       /*abstand zum linken bildschirmrand*/
+    margin-right: auto;                      /*abstand zum rechten bildschirmrand*/
+    border: 1px solid white;               /*rand der box (1px: breite  solid: gefüllter rand  white: farbe des randes)*/
+    border-radius: 10px;
+    text-align: center;                      /*jeder text (achtung: nur text, keine anderen elemente) wird zentriert*/
+    background: linear-gradient(to left, rgb(255, 255, 255), rgb(227, 230, 255));
+    box-shadow: rgb(36, 35, 35) 10px 10px 20px;     
+}
+
+.vlAnzeigen{
+    margin-top: 130px;
+    cursor: pointer;
+}
+
+li{
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    list-style: none;
+    font-size: 15px;
+}
+
+.deleteBtn{
+    padding: 5px 8px;
+    margin-left: auto;
+    height: 30px;
+    width: 80px;
+}
+
+.vokabeltest{
+    margin-top: 70px;
+    display: none;
+    padding-bottom: 40px;
+}
+
+::-webkit-scrollbar{                                        /*scrollleiste rechts auf der website*/
+    width: 10px;
+    background-color: rgb(163, 163, 218);
+}
+
+::-webkit-scrollbar-thumb{                                  /*scrollbalken*/
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background-color: rgb(145, 145, 193);
+    width: 15px;
+}

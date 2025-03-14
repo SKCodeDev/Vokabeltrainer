@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vokabeltrainer</title>
+    <link rel="stylesheet" href="style.css">                <!--href = Hypertext Reference-->
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+<body>
+
+    <h1>Vokabeltrainer</h1>
+    
+    <div class="box">
+        <p style="margin-top: 20px;">           <!--paragraph (<p>) mit abstand von 20px zu oberem rand der box-->                              
+        <input type="text" id="idDW" placeholder="Deutsches Wort">
+        <input type="text" id="idEW" placeholder="Übersetzung">
+        <button onclick="hinzufügen()">Hinzufügen</button>
+        <button onclick="testStarten()">Vokabeltest starten</button>
+
+        <div style="margin-top: -50px;">        <!--abstand von -50px: das/die div ist 50px nach oben in der box verschoben -->
+            <h2 class="vlAnzeigen" onclick="showVL()">Gespeicherte Vokabeln</h2>
+            <ul id="idVokabelListe"></ul>
+        </div>
+
+        <div id="vokabelTest" class="vokabeltest" style="display: none;">       <!--wird beim laden der website nicht angezeigt-->
+            <h2>Vokabeltest</h2>
+            <p id="idFrage"></p>
+            <input type="text" id="idAntwort" placeholder="Antwort eingeben">
+            <button onclick="kontrollieren()">Bestätigen</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
