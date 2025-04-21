@@ -12,8 +12,6 @@ h1{
                                                10px: verschiebung nach unten  20px: schatten ist bisschen verschwommener*/
 } 
 
-
-
 input { 
     margin: 5px;                             /*abstand zueinander*/
     padding: 10px;                           /*abstand zu den rändern der "box"*/
@@ -98,4 +96,14 @@ li{
 ::-webkit-scrollbar-thumb:hover{
     background-color: rgb(145, 145, 193);
     width: 15px;
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    margin-top: 370px;
+}
+
+a {
+    color: rgb(1, 1, 177);
 }
