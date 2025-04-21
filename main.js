@@ -1,7 +1,7 @@
 let vokabel = JSON.parse(localStorage.getItem("vokabel")) || [];    //vokabel wird entweder in ls oder leerer liste gesucht 
 let currentIndex = 0;                                               //gibt position der vokabel im array an (die wievielte vokabel es ist)
-let score = 0;
-let geklickt = false
+let score = 0;                                                      //anfangspunktzahl in vokabeltest
+let geklickt = false                                                //wichtig für vokabelliste
 
 function hinzufügen() {
     geklickt = false
@@ -10,7 +10,7 @@ function hinzufügen() {
     if (deutschesWort && übersetzung) {                             //wenn ein deutsches wort und eine überetzung eingegeben wurde...
         vokabel.push({ deutschesWort, übersetzung });               //die eingegebenen wörter (vokabel) werden in die vokabelliste eingefügt
         localStorage.setItem("vokabel", JSON.stringify(vokabel));   //=> variablen "deutschesWort" und "übersetzung" können als string nicht
-        document.getElementById("idDW").value = "";                 //   gespeichert werden; sie müssen also in ein Objekt umgewandelt werden
+        document.getElementById("idDW").value = "";                 //   gespeichert werden; sie müssen in Objekt umgewandelt werden
         document.getElementById("idEW").value = "";
         updateVL();
         showVL()
@@ -89,15 +89,17 @@ function kontrollieren() {
         frage();                                                     //nächste frage
     }
     else {                                                           //wenn abgefragte vokabel die letzte in der liste war...
-        if (score < (vokabel.length/2)){                             //...und man weniger als die hälfte richtig hatte...
-            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nDa geht noch mehr!`);   //wird man "motiviert"
+        if (score < (vokabel.length/2)){                            
+            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nDa geht noch mehr!`); 
         }
-
-        else if ((vokabel.length/2) < score && score < vokabel.length) {           //...und man mehr als die hälfte aber nicht alle richtig hatte...         
-            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nGut!`);     //wird man gelobt
+        else if ((vokabel.length/2) < score && score < vokabel.length) {           
+            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nGut!`);     
         }
-        else if (score = vokabel.length){                                          //...und man alle richtig hatte...
-            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nSehr Gut!`);    //wird man noch mehr gelobt
+        else if (score === vokabel.length){                                          
+            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nSehr Gut!`);
+        }
+        else if (score === vokabel.length/2){
+            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nDie Hälfte!`)
         }
         document.getElementById("vokabelTest").style.display = "none";      //vokabeltest wird ausgeblendet
     }
