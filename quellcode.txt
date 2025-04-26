@@ -1,0 +1,276 @@
+HTML:
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vokabeltrainer</title>
+    <link rel="stylesheet" href="style.css">                <!--href = Hypertext Reference-->
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+<body>
+
+    <h1>Vokabeltrainer</h1>
+    
+    <div class="box">
+        <p style="margin-top: 20px;">           <!--paragraph (<p>) mit abstand von 20px zu oberem rand der box-->                              
+        <input type="text" id="idDW" placeholder="Deutsches Wort">
+        <input type="text" id="idEW" placeholder="Übersetzung">
+        <button onclick="hinzufügen()">Hinzufügen</button>
+        <button onclick="testStarten()">Vokabeltest starten</button>
+
+        <div style="margin-top: -50px;">        <!--abstand von -50px: das/die div ist 50px nach oben in der box verschoben -->
+            <h2 class="vlAnzeigen" onclick="showVL()">Gespeicherte Vokabeln</h2>
+            <ul id="idVokabelListe"></ul>
+        </div>
+
+        <div id="vokabelTest" class="vokabeltest" style="display: none;">       <!--wird beim laden der website nicht angezeigt-->
+            <h2>Vokabeltest</h2>
+            <p id="idFrage"></p>
+            <input type="text" id="idAntwort" placeholder="Antwort eingeben">
+            <button onclick="kontrollieren()">Bestätigen</button>
+        </div>
+    </div>
+
+    <div class="links">
+        <a href="https://easyvocabs.wordpress.com/2025/04/21/vokabeltrainer-als-einsteigerprojekt/">Entwicklung des Vokabeltrainers</a>&nbsp;&nbsp;
+        <a href="quellcode.html">Quellcode</a>
+    </div>
+    
+    <script src="script.js"></script>
+    
+</body>
+</html>
+
+
+
+JavaScript:
+
+let vokabel = JSON.parse(localStorage.getItem("vokabel")) || [];    //vokabel wird entweder in ls oder leerer liste gesucht 
+let currentIndex = 0;                                               //gibt position der vokabel im array an (die wievielte vokabel es ist)
+let score = 0;                                                      //anfangspunktzahl in vokabeltest
+let geklickt = false                                                //wichtig für vokabelliste
+
+function hinzufügen() {
+    geklickt = false
+    let deutschesWort = document.getElementById("idDW").value;
+    let übersetzung = document.getElementById("idEW").value;
+    if (deutschesWort && übersetzung) {                             //wenn ein deutsches wort und eine überetzung eingegeben wurde...
+        vokabel.push({ deutschesWort, übersetzung });               //die eingegebenen wörter (vokabel) werden in die vokabelliste eingefügt
+        localStorage.setItem("vokabel", JSON.stringify(vokabel));   //=> variablen "deutschesWort" und "übersetzung" können als string nicht
+        document.getElementById("idDW").value = "";                 //   gespeichert werden; sie müssen in Objekt umgewandelt werden
+        document.getElementById("idEW").value = "";
+        updateVL();
+        showVL()
+    }
+}
+
+function updateVL() {
+    const list = document.getElementById("idVokabelListe");
+    list.innerHTML = "";                                                        //liste wird zum aktualisieren zunächst geleert um doppelte einträge zu verhindern
+    vokabel.forEach((entry, wort) => {                                          //folgendes wird für jede vokabel ausgeführt
+        const li = document.createElement("li");                                //<li>-element wird erstellt
+        li.textContent = `${entry.deutschesWort} - ${entry.übersetzung}`;       //inhalt des jeweiligen <li> ist eingegebenes deutsches wort und übersetzung
+        li.style.display = "flex"                                               //<li>-item wird sichtbar gemacht
+        const deleteButton = document.createElement("button");                  //<button> zum löschen der jeweiligen vokabel wird erstellt 
+        deleteButton.innerHTML = "Löschen";                                     
+        deleteButton.classList.add("deleteBtn")                                 //dem lösch-button wird die css-klasse "deleteBtn" hinzugefügt
+        deleteButton.onclick = () => wortLöschen(wort);                         //beim klicken des buttons wird funktion wortLöschen() aufgerufen mit parameter
+        li.appendChild(deleteButton);                                           //lösch-button wird dem <li>-element als child hinzugefügt
+        list.appendChild(li);                                                   //<li>-element (welches button enthält) wird der gesamten liste hinzugefügt
+    });
+}
+
+function showVL(){
+    const list = document.getElementById("idVokabelListe")
+    const li = document.querySelectorAll("li")                                  //jedes existierende <li>-element wird aufgerufen
+    if(!geklickt){                                                              //wenn variable "geklickt" noch auf false gesetzt ist (oben deklariert)...
+        list.style.display = "block"                                            //komplette liste wird untereinander angezeigt
+        li.forEach(li => {                                                      //jedes <li>-element...
+            li.style.display = "flex"                                           //wird in einer reihe angezeigt
+        })
+        geklickt = true                                                         //"geklickt" wird auf true gesetzt (damit man liste immer wieder ein- und ausblenden kann)
+    }
+    else{                                                                       //wenn "geklickt" nicht auf false ist...
+        list.style.display = "none"                                             //komplette liste wird ausgeblendet und...
+        li.forEach(li => {                                                      //jedes <li>-element...
+            li.style.display = "none"                                           //wird ausgeblendet
+        })
+        geklickt = false                                                        //"geklickt" wird wieder auf false gesetzt
+    }
+}
+
+function wortLöschen(wort) {
+    geklickt = false                                                     //"geklickt" wird auf false gesetzt, damit durch showVL() die liste weiterhin angezeigt wird
+    vokabel.splice(wort, 1);                                             //wort = jeweiliges wort, das man löschen will, 1 = man will nur genau ein wort löschen
+    localStorage.setItem("vokabel", JSON.stringify(vokabel));            //der lokale speicher merkt sich, dass die vokabel gelöscht wurde
+    updateVL();                                                          
+    showVL()
+}
+
+function testStarten() {
+    if (vokabel.length == 0) {                                              //wenn noch gar keine vokabeln gespeichert wurden...
+        alert("Keine Vokabeln gespeichert!");                               //wird man darüber informiert :)
+        return;                                                             //return = schleife wird sofort beendet wenn bedingung zutrifft
+    }
+    else{                                                                   //wenn doch vokabeln gespeichert wurden...
+        document.getElementById("vokabelTest").style.display = "block";     //wird der "vokabeltest" angezeigt
+        currentIndex = 0;                                                   //es wird festgelegt, dass gleich die ERSTE vokabel abgefragt wird
+        score = 0;                                                          //score wird zu beginn auf 0 gesetzt
+        frage();                    
+    }
+}
+
+const antwort = document.getElementById("idAntwort")                          
+
+function frage() {
+    document.getElementById("idFrage").innerText = `Übersetze: "${vokabel[currentIndex].deutschesWort}"`;
+    antwort.value = "";                         //bei jeder neuen frage wird das antwortfeld mit der von vorher enthaltenen vokabel geleert
+}  
+
+function kontrollieren() {
+    if (antwort.value == vokabel[currentIndex].übersetzung) {        //wenn antwort richtig ist...
+        score++;                                                     //wird die punktzahl um 1 erhöht
+    }
+    if (currentIndex + 1 < vokabel.length) {                         //wenn momentane abgefragte vokabel noch nicht die letzte ist...   
+        currentIndex++;                                              
+        frage();                                                     //nächste frage
+    }
+    else {                                                           //wenn abgefragte vokabel die letzte in der liste war...
+        if (score < (vokabel.length/2)){                            
+            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nDa geht noch mehr!`); 
+        }
+        else if ((vokabel.length/2) < score && score < vokabel.length) {           
+            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nGut!`);     
+        }
+        else if (score === vokabel.length){                                          
+            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nSehr Gut!`);
+        }
+        else if (score === vokabel.length/2){
+            alert(`Test beendet! Deine Punktzahl: ${score} / ${vokabel.length}\nDie Hälfte!`)
+        }
+        document.getElementById("vokabelTest").style.display = "none";      //vokabeltest wird ausgeblendet
+    }
+}
+
+antwort.addEventListener("keydown", function(e){                    //keydown listener prüft, ob...
+    if(e.key === "Enter")                                           //enter auf der tastatur gedrückt wurde...
+        kontrollieren()                                             //und führt dann auch kontrollieren() aus
+}) 
+
+updateVL();                                                          //nochmal globales aufrufen der updateVL() funktion, um sicher zu gehen,
+                                                                     //dass liste jedes mal nach starten der website aktualisiert wird
+
+
+CSS 
+
+body { 
+    font-family: Arial, sans-serif;                                                     /*schriftart der ganzen website*/
+    background: linear-gradient(to right, rgb(32, 97, 228), rgb(184, 184, 226));    /*hintergrundfarbe; 
+                                                                                          von rechts nach links immer heller werdender blauton*/
+}    
+        
+h1{
+    text-align: center;                      /*position des textes*/
+    color: white;                          /*textfarbe*/
+    font-size: 50px;                         /*textgröße*/
+    text-shadow: black 10px 10px 20px;     /*black: farbe des schattens  10px: verschiebung nach rechts  
+                                               10px: verschiebung nach unten  20px: schatten ist bisschen verschwommener*/
+} 
+
+input { 
+    margin: 5px;                             /*abstand zueinander*/
+    padding: 10px;                           /*abstand zu den rändern der "box"*/
+    background-color: white;
+    border-radius: 10px;                     /*rundung des randes*/
+    border: 0.5px solid grey;
+    transition: 0.15s ease-in-out;           /*animation ⬇️ wird innerhalb von 0.1s zwischendurch schneller und dann wieder langsamer*/
+}
+
+input:hover, input:focus{                    /*➡️ wenn man mit der maus über das textfeld hovert oder man es anklickt*/
+    border-radius: 50px;
+    border: 1px solid grey;
+}
+
+button{
+    margin: 5px;
+    padding: 10px;          
+    width: auto;                                
+    cursor: pointer;                          /*cursor wird zum "pointer"*/
+    background-color: rgb(74, 74, 250);
+    color: white;
+    font-weight: bold;                        /*schriftstärke/-dicke*/
+    border-radius: 20px;                      
+    border: none;
+    transition: 0.2s ease-in-out;
+}
+
+button:hover{
+    width: calc(auto + 5px);                            /*buttons werden minimal größer*/
+    background-color: rgb(102, 102, 251);             /*farbe der buttons wird minimal heller*/
+    letter-spacing: 1px;                                /*abstand der buchstaben zueinander wird erhöht*/
+}
+
+.box{
+    width: 750px;
+    margin-top: 80px;                        /*abstand zum oberen bildschirmrand*/
+    margin-left: auto;                       /*abstand zum linken bildschirmrand*/
+    margin-right: auto;                      /*abstand zum rechten bildschirmrand*/
+    border: 1px solid white;               /*rand der box (1px: breite  solid: gefüllter rand  white: farbe des randes)*/
+    border-radius: 10px;
+    text-align: center;                      /*jeder text (achtung: nur text, keine anderen elemente) wird zentriert*/
+    background: linear-gradient(to left, rgb(255, 255, 255), rgb(227, 230, 255));
+    box-shadow: rgb(36, 35, 35) 10px 10px 20px;     
+}
+
+.vlAnzeigen{
+    margin-top: 130px;
+    cursor: pointer;
+}
+
+li{
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    list-style: none;
+    font-size: 15px;
+}
+
+.deleteBtn{
+    padding: 5px 8px;
+    margin-left: auto;
+    height: 30px;
+    width: 80px;
+}
+
+.vokabeltest{
+    margin-top: 70px;
+    display: none;
+    padding-bottom: 40px;
+}
+
+::-webkit-scrollbar{                                        /*scrollleiste rechts auf der website*/
+    width: 10px;
+    background-color: rgb(163, 163, 218);
+}
+
+::-webkit-scrollbar-thumb{                                  /*scrollbalken*/
+    border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background-color: rgb(145, 145, 193);
+    width: 15px;
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    margin-top: 370px;
+}
+
+a {
+    color: rgb(1, 1, 177);
+}
